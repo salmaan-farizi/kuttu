@@ -1,0 +1,2651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashad Kuttu Business Manager</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#4facfe">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ashad Kuttu Business Manager">
+    
+    <!-- Icons -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%234facfe'/%3E%3Ctext x='50' y='55' font-family='Arial' font-size='60' fill='white' text-anchor='middle'%3E₿%3C/text%3E%3C/svg%3E">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #4facfe;
+            --primary-dark: #0083f7;
+            --secondary-color: #00f2fe;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --border-radius: 12px;
+            --shadow: 0 4px 12px rgba(0,0,0,0.15);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .config-section {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .config-section.hidden {
+            display: none;
+        }
+
+        .nav-tabs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .nav-tab {
+            background: white;
+            border: none;
+            padding: 15px 10px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--dark-color);
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .nav-tab:hover {
+            background: var(--light-color);
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .tab-content {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 0.9rem;
+        }
+
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-right: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color) 0%, #1e7e34 100%);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color) 0%, #c82333 100%);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .dashboard-card.profit-positive {
+            border-left-color: var(--success-color);
+        }
+
+        .dashboard-card.profit-negative {
+            border-left-color: var(--danger-color);
+        }
+
+        .dashboard-card.cash-card {
+            border-left-color: var(--success-color);
+        }
+
+        .dashboard-card.receivable-card {
+            border-left-color: var(--warning-color);
+        }
+
+        .dashboard-card.payable-card {
+            border-left-color: var(--danger-color);
+        }
+
+        .dashboard-card h3 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .dashboard-card.profit-positive h3 {
+            color: var(--success-color);
+        }
+
+        .dashboard-card.profit-negative h3 {
+            color: var(--danger-color);
+        }
+
+        .dashboard-card.cash-card h3 {
+            color: var(--success-color);
+        }
+
+        .dashboard-card.receivable-card h3 {
+            color: var(--warning-color);
+        }
+
+        .dashboard-card.payable-card h3 {
+            color: var(--danger-color);
+        }
+
+        .dashboard-card p {
+            color: var(--dark-color);
+            font-weight: 600;
+            opacity: 0.8;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            position: relative;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background: #cce7ff;
+            color: #0c5460;
+            border: 1px solid #b3d7ff;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .config-form {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .config-form h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-left: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .status-connected {
+            background-color: var(--success-color);
+        }
+
+        .status-disconnected {
+            background-color: var(--danger-color);
+        }
+
+        .customer-card, .vendor-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .customer-card:hover, .vendor-card:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .customer-card h4, .customer-card h5, .vendor-card h4, .vendor-card h5 {
+            color: var(--dark-color);
+            margin-bottom: 8px;
+        }
+
+        .customer-card p, .vendor-card p {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin: 2px 0;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .calculated-field {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            color: #495057;
+            font-weight: bold;
+        }
+
+        .balance-info {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .profit-loss-indicator {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .profit {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .loss {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .break-even {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .small-text {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .transaction-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+        }
+
+        .transaction-item {
+            padding: 15px;
+            border-bottom: 1px solid #f1f3f4;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .transaction-item:hover {
+            background: #f8f9fa;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-details h4 {
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+            color: var(--dark-color);
+        }
+
+        .transaction-details p {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin: 2px 0;
+        }
+
+        .transaction-amount {
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-align: right;
+        }
+
+        .amount-positive {
+            color: var(--success-color);
+        }
+
+        .amount-negative {
+            color: var(--danger-color);
+        }
+
+        .inventory-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--info-color);
+            transition: var(--transition);
+        }
+
+        .inventory-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .inventory-item.low-stock {
+            border-left-color: var(--warning-color);
+            background: #fff3cd;
+        }
+
+        .inventory-item.out-of-stock {
+            border-left-color: var(--danger-color);
+            background: #f8d7da;
+        }
+
+        .stock-summary-card {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--info-color);
+        }
+
+        .stock-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .stock-summary-item {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+        }
+
+        .stock-summary-item h5 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .stock-summary-item p {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .payment-type-highlight {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .payment-cash {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .payment-credit {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .app-container { 
+                padding: 10px; 
+            }
+            .header h1 { 
+                font-size: 1.5rem; 
+            }
+            .nav-tabs { 
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
+                gap: 8px; 
+            }
+            .nav-tab { 
+                padding: 12px 8px; 
+                font-size: 0.8rem; 
+            }
+            .form-grid { 
+                grid-template-columns: 1fr; 
+                gap: 10px; 
+            }
+            .dashboard-cards { 
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+                gap: 10px; 
+            }
+            .dashboard-card {
+                padding: 15px;
+            }
+            .dashboard-card h3 {
+                font-size: 1.4rem;
+            }
+            .btn { 
+                min-width: 100px; 
+                font-size: 0.8rem; 
+                padding: 10px 15px; 
+            }
+            .stock-summary-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 8px;
+            }
+            .transaction-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .transaction-amount {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+            .nav-tab {
+                padding: 10px 6px;
+                font-size: 0.75rem;
+            }
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <h1>📊 Ashad Kuttu Business Manager</h1>
+            <p>Complete Credit & Cash Management System</p>
+            <div id="connection-status">
+                <span>Status: Disconnected</span>
+                <span class="status-indicator status-disconnected"></span>
+            </div>
+        </div>
+
+        <div id="config-section" class="config-section">
+            <div class="config-form">
+                <h3>🔗 Connect to Google Sheets</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="api-url">Google Apps Script URL</label>
+                        <input type="url" id="api-url" placeholder="https://script.google.com/macros/s/.../exec">
+                        <small>Paste your deployed Apps Script web app URL here</small>
+                    </div>
+                    <div class="form-group">
+                        <label></label>
+                        <button onclick="testConnection()" class="btn" id="test-btn">🔗 Test Connection</button>
+                        <button onclick="saveConfig()" class="btn btn-success">💾 Save Config</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('dashboard')">📈 Dashboard</button>
+            <button class="nav-tab" onclick="switchTab('sales')">💰 Sales</button>
+            <button class="nav-tab" onclick="switchTab('purchases')">🛒 Purchases</button>
+            <button class="nav-tab" onclick="switchTab('expenses')">💸 Expenses</button>
+            <button class="nav-tab" onclick="switchTab('receipts')">🧾 Receipts</button>
+            <button class="nav-tab" onclick="switchTab('payments')">💳 Payments</button>
+            <button class="nav-tab" onclick="switchTab('inventory')">📦 Inventory</button>
+            <button class="nav-tab" onclick="switchTab('customers')">👥 Customers</button>
+            <button class="nav-tab" onclick="switchTab('vendors')">🏪 Vendors</button>
+            <button class="nav-tab" onclick="switchTab('reports')">📊 Reports</button>
+        </div>
+
+        <div class="tab-content">
+            <div id="dashboard" class="tab-panel active">
+                <h2>Business Overview</h2>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card cash-card">
+                        <h3 id="total-cash">0 ريال</h3>
+                        <p>Cash in Hand</p>
+                    </div>
+                    <div class="dashboard-card receivable-card">
+                        <h3 id="total-receivables">0 ريال</h3>
+                        <p>Customer Receivables</p>
+                    </div>
+                    <div class="dashboard-card payable-card">
+                        <h3 id="total-payables">0 ريال</h3>
+                        <p>Vendor Payables</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3 id="net-cash-position">0 ريال</h3>
+                        <p>Net Cash Position</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <h3 id="month-sales">0 ريال</h3>
+                        <p>This Month Sales</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3 id="month-purchases">0 ريال</h3>
+                        <p>This Month Purchases</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3 id="month-cash-sales">0 ريال</h3>
+                        <p>Cash Sales</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3 id="month-credit-sales">0 ريال</h3>
+                        <p>Credit Sales</p>
+                    </div>
+                </div>
+
+                <div class="stock-summary-card">
+                    <h3>📦 Stock Summary</h3>
+                    <div class="stock-summary-grid">
+                        <div class="stock-summary-item">
+                            <h5 id="total-stock-items">0</h5>
+                            <p>Total Items</p>
+                        </div>
+                        <div class="stock-summary-item">
+                            <h5 id="total-stock-quantity">0</h5>
+                            <p>Total Quantity</p>
+                        </div>
+                        <div class="stock-summary-item">
+                            <h5 id="low-stock-count">0</h5>
+                            <p>Low Stock</p>
+                        </div>
+                        <div class="stock-summary-item">
+                            <h5 id="out-stock-count">0</h5>
+                            <p>Out of Stock</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <h3 id="total-sales">0 ريال</h3>
+                        <p>Total Sales</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3 id="total-purchases">0 ريال</h3>
+                        <p>Total Purchases</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3 id="total-expenses">0 ريال</h3>
+                        <p>Total Expenses</p>
+                    </div>
+                    <div class="dashboard-card" id="net-profit-card">
+                        <h3 id="net-profit">0 ريال</h3>
+                        <p>Net Profit/Loss</p>
+                        <div id="profit-loss-indicator" class="profit-loss-indicator break-even">Break Even</div>
+                    </div>
+                </div>
+
+                <h3>Recent Transactions</h3>
+                <div id="recent-transactions" class="transaction-list">
+                    <div style="padding: 20px; text-align: center; color: #6c757d;">Connect to Google Sheets to see your transactions</div>
+                </div>
+
+                <button onclick="refreshDashboard()" class="btn" id="refresh-btn">🔄 Refresh</button>
+            </div>
+
+            <div id="sales" class="tab-panel">
+                <h2>Record Sale</h2>
+                <form id="sales-form" onsubmit="addSale(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="sale-customer-id">Customer</label>
+                            <select id="sale-customer-id" required onchange="updateCustomerInfo('sale')">
+                                <option value="">Select Customer</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sale-product">Product</label>
+                            <select id="sale-product" onchange="updateProductInfo()">
+                                <option value="">Select Product (or enter manually)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sale-description">Description</label>
+                            <input type="text" id="sale-description" placeholder="Product/Service description" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sale-quantity">Quantity</label>
+                            <input type="number" id="sale-quantity" min="1" value="1" required onchange="calculateSaleTotal()">
+                        </div>
+                        <div class="form-group">
+                            <label for="sale-unit-price">Unit Price (ريال)</label>
+                            <input type="number" id="sale-unit-price" step="0.01" placeholder="0.00" required onchange="calculateSaleTotal()">
+                        </div>
+                        <div class="form-group">
+                            <label for="sale-total">Total Amount (ريال)</label>
+                            <input type="number" id="sale-total" step="0.01" class="calculated-field" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="sale-payment-type">Payment Type</label>
+                            <select id="sale-payment-type" required onchange="updateSalePaymentInfo()">
+                                <option value="">Select Payment Type</option>
+                                <option value="Cash">💵 Cash Sale</option>
+                                <option value="Credit">📝 Credit Sale</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sale-payment-method">Payment Method</label>
+                            <select id="sale-payment-method">
+                                <option value="Cash">Cash</option>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="Check">Check</option>
+                                <option value="Digital Wallet">Digital Wallet</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sale-invoice">Invoice Number</label>
+                            <input type="text" id="sale-invoice" placeholder="INV-001">
+                        </div>
+                    </div>
+                    
+                    <div id="stock-warning" style="display: none;" class="alert alert-warning">
+                        <strong>Stock Warning:</strong> <span id="stock-warning-text"></span>
+                    </div>
+
+                    <div id="sale-payment-info" style="display: none;" class="balance-info">
+                        <div id="sale-payment-message"></div>
+                    </div>
+                    
+                    <button type="submit" class="btn" id="sales-submit">💰 Record Sale</button>
+                    <button type="button" onclick="clearForm('sales-form')" class="btn btn-secondary">🗑️ Clear</button>
+                </form>
+            </div>
+
+            <div id="purchases" class="tab-panel">
+                <h2>Record Purchase</h2>
+                <form id="purchases-form" onsubmit="addPurchase(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="purchase-vendor">Vendor</label>
+                            <select id="purchase-vendor" required>
+                                <option value="">Select Vendor</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="purchase-description">Product/Description</label>
+                            <input type="text" id="purchase-description" placeholder="Item description" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="purchase-category">Category</label>
+                            <select id="purchase-category">
+                                <option value="Inventory">Inventory</option>
+                                <option value="Equipment">Equipment</option>
+                                <option value="Supplies">Supplies</option>
+                                <option value="Services">Services</option>
+                                <option value="Raw Materials">Raw Materials</option>
+                                <option value="Software">Software</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="purchase-quantity">Quantity</label>
+                            <input type="number" id="purchase-quantity" min="1" value="1" required onchange="calculatePurchaseTotal()">
+                        </div>
+                        <div class="form-group">
+                            <label for="purchase-unit-cost">Unit Cost (ريال)</label>
+                            <input type="number" id="purchase-unit-cost" step="0.01" placeholder="0.00" required onchange="calculatePurchaseTotal()">
+                        </div>
+                        <div class="form-group">
+                            <label for="purchase-total">Total Amount (ريال)</label>
+                            <input type="number" id="purchase-total" step="0.01" class="calculated-field" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="purchase-payment-type">Payment Type</label>
+                            <select id="purchase-payment-type" required onchange="updatePurchasePaymentInfo()">
+                                <option value="">Select Payment Type</option>
+                                <option value="Cash">💵 Cash Purchase</option>
+                                <option value="Credit">📝 Credit Purchase</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="purchase-payment-method">Payment Method</label>
+                            <select id="purchase-payment-method">
+                                <option value="Cash">Cash</option>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="Check">Check</option>
+                                <option value="Company Card">Company Card</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="purchase-receipt">Receipt Number</label>
+                            <input type="text" id="purchase-receipt" placeholder="REC-001">
+                        </div>
+                    </div>
+
+                    <div id="purchase-payment-info" style="display: none;" class="balance-info">
+                        <div id="purchase-payment-message"></div>
+                    </div>
+
+                    <button type="submit" class="btn" id="purchases-submit">🛒 Record Purchase</button>
+                    <button type="button" onclick="clearForm('purchases-form')" class="btn btn-secondary">🗑️ Clear</button>
+                </form>
+            </div>
+
+            <div id="expenses" class="tab-panel">
+                <h2>Record Expense</h2>
+                <form id="expenses-form" onsubmit="addExpense(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="expense-category">Category</label>
+                            <select id="expense-category">
+                                <option value="Rent">Rent</option>
+                                <option value="Utilities">Utilities</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Travel">Travel</option>
+                                <option value="Office Supplies">Office Supplies</option>
+                                <option value="Insurance">Insurance</option>
+                                <option value="Legal & Professional">Legal & Professional</option>
+                                <option value="Meals & Entertainment">Meals & Entertainment</option>
+                                <option value="Phone & Internet">Phone & Internet</option>
+                                <option value="Maintenance">Maintenance</option>
+                                <option value="Salaries">Salaries</option>
+                                <option value="Bank Charges">Bank Charges</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="expense-description">Description</label>
+                            <input type="text" id="expense-description" placeholder="Expense description" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="expense-amount">Amount (ريال)</label>
+                            <input type="number" id="expense-amount" step="0.01" placeholder="0.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="expense-vendor">Vendor/Payee</label>
+                            <input type="text" id="expense-vendor" placeholder="Who was paid">
+                        </div>
+                        <div class="form-group">
+                            <label for="expense-receipt">Receipt Number</label>
+                            <input type="text" id="expense-receipt" placeholder="Receipt number">
+                        </div>
+                        <div class="form-group">
+                            <label for="expense-payment">Payment Method</label>
+                            <select id="expense-payment">
+                                <option value="Cash">Cash</option>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="Check">Check</option>
+                                <option value="Company Card">Company Card</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn" id="expenses-submit">💸 Record Expense</button>
+                    <button type="button" onclick="clearForm('expenses-form')" class="btn btn-secondary">🗑️ Clear</button>
+                </form>
+            </div>
+
+            <div id="receipts" class="tab-panel">
+                <h2>Customer Receipts</h2>
+                <form id="receipts-form" onsubmit="addReceipt(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="receipt-customer-id">Customer</label>
+                            <select id="receipt-customer-id" required onchange="showCustomerBalance()">
+                                <option value="">Select Customer</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="receipt-amount">Amount Received (ريال)</label>
+                            <input type="number" id="receipt-amount" step="0.01" placeholder="0.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="receipt-method">Payment Method</label>
+                            <select id="receipt-method">
+                                <option value="Cash">Cash</option>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="Check">Check</option>
+                                <option value="Digital Wallet">Digital Wallet</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="receipt-reference">Reference/Invoice</label>
+                            <input type="text" id="receipt-reference" placeholder="Related invoice">
+                        </div>
+                        <div class="form-group">
+                            <label for="receipt-notes">Notes</label>
+                            <textarea id="receipt-notes" rows="2" placeholder="Additional notes"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div id="customer-balance-display" style="display: none;" class="balance-info">
+                        <strong>Customer Balance:</strong> <span id="current-customer-balance">0 ريال</span>
+                        <br><span class="small-text">This payment will reduce the customer's outstanding balance</span>
+                    </div>
+                    
+                    <button type="submit" class="btn" id="receipts-submit">🧾 Record Receipt</button>
+                    <button type="button" onclick="clearForm('receipts-form')" class="btn btn-secondary">🗑️ Clear</button>
+                </form>
+            </div>
+
+            <div id="payments" class="tab-panel">
+                <h2>Vendor Payments</h2>
+                <form id="payments-form" onsubmit="addPayment(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="payment-vendor-id">Vendor</label>
+                            <select id="payment-vendor-id" required onchange="showVendorBalance()">
+                                <option value="">Select Vendor</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-amount">Amount Paid (ريال)</label>
+                            <input type="number" id="payment-amount" step="0.01" placeholder="0.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-method">Payment Method</label>
+                            <select id="payment-method">
+                                <option value="Cash">Cash</option>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="Check">Check</option>
+                                <option value="Company Card">Company Card</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-reference">Reference/Invoice</label>
+                            <input type="text" id="payment-reference" placeholder="Related purchase invoice">
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-notes">Notes</label>
+                            <textarea id="payment-notes" rows="2" placeholder="Additional notes"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div id="vendor-balance-display" style="display: none;" class="balance-info">
+                        <strong>Vendor Balance:</strong> <span id="current-vendor-balance">0 ريال</span>
+                        <br><span class="small-text">This payment will reduce your payable to this vendor</span>
+                    </div>
+                    
+                    <button type="submit" class="btn" id="payments-submit">💳 Record Payment</button>
+                    <button type="button" onclick="clearForm('payments-form')" class="btn btn-secondary">🗑️ Clear</button>
+                </form>
+            </div>
+
+            <div id="inventory" class="tab-panel">
+                <h2>Inventory Management</h2>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <button onclick="refreshInventory()" class="btn">🔄 Refresh Inventory</button>
+                        <button onclick="addInventoryItem()" class="btn btn-success">➕ Add Item</button>
+                    </div>
+                </div>
+
+                <div id="inventory-form" style="display: none; background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <h4>Add New Inventory Item</h4>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="inventory-name">Product Name</label>
+                            <input type="text" id="inventory-name" placeholder="Product name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inventory-category">Category</label>
+                            <select id="inventory-category">
+                                <option value="Electronics">Electronics</option>
+                                <option value="Clothing">Clothing</option>
+                                <option value="Food">Food</option>
+                                <option value="Books">Books</option>
+                                <option value="Services">Services</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="inventory-quantity">Quantity</label>
+                            <input type="number" id="inventory-quantity" min="0" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inventory-cost">Unit Cost (ريال)</label>
+                            <input type="number" id="inventory-cost" step="0.01" placeholder="0.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inventory-price">Selling Price (ريال)</label>
+                            <input type="number" id="inventory-price" step="0.01" placeholder="0.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inventory-min-stock">Minimum Stock</label>
+                            <input type="number" id="inventory-min-stock" min="0" value="5" required>
+                        </div>
+                    </div>
+                    <button onclick="saveInventoryItem()" class="btn btn-success">💾 Save Item</button>
+                    <button onclick="cancelInventoryItem()" class="btn btn-secondary">❌ Cancel</button>
+                </div>
+
+                <h3>Current Stock</h3>
+                <div id="inventory-list">
+                    <div style="padding: 20px; text-align: center; color: #6c757d;">No inventory items yet. Add items through purchases or manually.</div>
+                </div>
+            </div>
+
+            <div id="customers" class="tab-panel">
+                <h2>Customer Management</h2>
+                <form id="customers-form" onsubmit="addCustomer(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="customer-name">Customer Name</label>
+                            <input type="text" id="customer-name" placeholder="Customer name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-email">Email</label>
+                            <input type="email" id="customer-email" placeholder="customer@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-phone">Phone</label>
+                            <input type="tel" id="customer-phone" placeholder="Phone number">
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-address">Address</label>
+                            <textarea id="customer-address" rows="2" placeholder="Customer address"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn" id="customers-submit">👥 Add Customer</button>
+                    <button type="button" onclick="loadCustomers()" class="btn btn-secondary">🔄 Refresh List</button>
+                    <button type="button" onclick="clearForm('customers-form')" class="btn btn-secondary">🗑️ Clear</button>
+                </form>
+
+                <h3>Customer List</h3>
+                <div id="customer-list">
+                    <div style="padding: 20px; text-align: center; color: #6c757d;">Connect to Google Sheets to see your customers</div>
+                </div>
+            </div>
+
+            <div id="vendors" class="tab-panel">
+                <h2>Vendor Management</h2>
+                <form id="vendors-form" onsubmit="addVendor(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="vendor-name">Vendor Name</label>
+                            <input type="text" id="vendor-name" placeholder="Vendor/Supplier name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="vendor-email">Email</label>
+                            <input type="email" id="vendor-email" placeholder="vendor@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="vendor-phone">Phone</label>
+                            <input type="tel" id="vendor-phone" placeholder="Phone number">
+                        </div>
+                        <div class="form-group">
+                            <label for="vendor-address">Address</label>
+                            <textarea id="vendor-address" rows="2" placeholder="Vendor address"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="vendor-company">Company</label>
+                            <input type="text" id="vendor-company" placeholder="Company name">
+                        </div>
+                        <div class="form-group">
+                            <label for="vendor-category">Category</label>
+                            <select id="vendor-category">
+                                <option value="Inventory Supplier">Inventory Supplier</option>
+                                <option value="Service Provider">Service Provider</option>
+                                <option value="Equipment Supplier">Equipment Supplier</option>
+                                <option value="Utilities">Utilities</option>
+                                <option value="Professional Services">Professional Services</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn" id="vendors-submit">🏪 Add Vendor</button>
+                    <button type="button" onclick="loadVendors()" class="btn btn-secondary">🔄 Refresh List</button>
+                    <button type="button" onclick="clearForm('vendors-form')" class="btn btn-secondary">🗑️ Clear</button>
+                </form>
+
+                <h3>Vendor List</h3>
+                <div id="vendor-list">
+                    <div style="padding: 20px; text-align: center; color: #6c757d;">Add your first vendor above</div>
+                </div>
+            </div>
+
+            <div id="reports" class="tab-panel">
+                <h2>Business Reports</h2>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <button onclick="generateSalesReport()" class="btn">📈 Sales Report</button>
+                        <button onclick="generatePurchaseReport()" class="btn">🛒 Purchase Report</button>
+                        <button onclick="generateInventoryReport()" class="btn">📦 Inventory Report</button>
+                        <button onclick="generateCustomerReport()" class="btn">👥 Customer Report</button>
+                        <button onclick="generateVendorReport()" class="btn">🏪 Vendor Report</button>
+                        <button onclick="generateCashFlowReport()" class="btn">💰 Cash Flow Report</button>
+                        <button onclick="generateProfitLossReport()" class="btn">📊 P&L Report</button>
+                    </div>
+                </div>
+
+                <div id="reports-content">
+                    <div style="padding: 40px; text-align: center; color: #6c757d;">
+                        <h3>Select a Report Type</h3>
+                        <p>Choose from the buttons above to generate detailed business reports</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let appConfig = {
+            apiUrl: '',
+            connected: false
+        };
+
+        let businessData = {
+            cashInHand: 0, // Start with 0 cash - you can set your actual starting cash
+            totalSales: 0,
+            totalPurchases: 0,
+            totalExpenses: 0,
+            thisMonthSales: 0,
+            thisMonthPurchases: 0,
+            thisMonthCashSales: 0,
+            thisMonthCreditSales: 0,
+            salesCount: 0,
+            customerReceivables: 0,
+            vendorPayables: 0,
+            transactions: []
+        };
+
+        let cachedCustomers = []; // Start with empty customer list
+        let cachedVendors = []; // Start with empty vendor list
+        let cachedInventory = []; // Start with empty inventory
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadConfig();
+            updateCustomerDropdowns();
+            updateVendorDropdowns();
+            generateInvoiceNumber();
+            updateProductDropdown();
+            refreshInventory();
+            refreshDashboard();
+            loadCustomers();
+            loadVendors();
+        });
+
+        function calculateSaleTotal() {
+            const quantity = parseFloat(document.getElementById('sale-quantity').value) || 0;
+            const unitPrice = parseFloat(document.getElementById('sale-unit-price').value) || 0;
+            const total = quantity * unitPrice;
+            document.getElementById('sale-total').value = total.toFixed(2);
+            checkStockAvailability();
+        }
+
+        function calculatePurchaseTotal() {
+            const quantity = parseFloat(document.getElementById('purchase-quantity').value) || 0;
+            const unitCost = parseFloat(document.getElementById('purchase-unit-cost').value) || 0;
+            const total = quantity * unitCost;
+            document.getElementById('purchase-total').value = total.toFixed(2);
+        }
+
+        function updateProductInfo() {
+            const productSelect = document.getElementById('sale-product');
+            const selectedProduct = productSelect.value;
+            
+            if (selectedProduct && cachedInventory.length > 0) {
+                const product = cachedInventory.find(item => item.name === selectedProduct);
+                if (product) {
+                    document.getElementById('sale-description').value = product.name;
+                    document.getElementById('sale-unit-price').value = product.sellingPrice || 0;
+                    calculateSaleTotal();
+                }
+            }
+        }
+
+        function updateSalePaymentInfo() {
+            const paymentType = document.getElementById('sale-payment-type').value;
+            const infoDiv = document.getElementById('sale-payment-info');
+            const messageDiv = document.getElementById('sale-payment-message');
+            
+            if (paymentType === 'Cash') {
+                infoDiv.style.display = 'block';
+                messageDiv.innerHTML = '<span class="payment-type-highlight payment-cash">💵 Cash Sale</span> Money will be added to Cash in Hand immediately';
+            } else if (paymentType === 'Credit') {
+                infoDiv.style.display = 'block';
+                messageDiv.innerHTML = '<span class="payment-type-highlight payment-credit">📝 Credit Sale</span> Amount will be added to Customer Receivables';
+            } else {
+                infoDiv.style.display = 'none';
+            }
+        }
+
+        function updatePurchasePaymentInfo() {
+            const paymentType = document.getElementById('purchase-payment-type').value;
+            const infoDiv = document.getElementById('purchase-payment-info');
+            const messageDiv = document.getElementById('purchase-payment-message');
+            
+            if (paymentType === 'Cash') {
+                infoDiv.style.display = 'block';
+                messageDiv.innerHTML = '<span class="payment-type-highlight payment-cash">💵 Cash Purchase</span> Money will be deducted from Cash in Hand immediately';
+            } else if (paymentType === 'Credit') {
+                infoDiv.style.display = 'block';
+                messageDiv.innerHTML = '<span class="payment-type-highlight payment-credit">📝 Credit Purchase</span> Amount will be added to Vendor Payables';
+            } else {
+                infoDiv.style.display = 'none';
+            }
+        }
+
+        function checkStockAvailability() {
+            const productName = document.getElementById('sale-description').value;
+            const quantity = parseFloat(document.getElementById('sale-quantity').value) || 0;
+            const warningDiv = document.getElementById('stock-warning');
+            const warningText = document.getElementById('stock-warning-text');
+            
+            if (productName && cachedInventory.length > 0) {
+                const product = cachedInventory.find(item => item.name === productName);
+                if (product) {
+                    if (product.quantity === 0) {
+                        warningDiv.style.display = 'block';
+                        warningDiv.className = 'alert alert-error';
+                        warningText.textContent = 'Product is out of stock!';
+                    } else if (quantity > product.quantity) {
+                        warningDiv.style.display = 'block';
+                        warningDiv.className = 'alert alert-error';
+                        warningText.textContent = `Only ${product.quantity} units available in stock!`;
+                    } else if (product.quantity <= product.minStock) {
+                        warningDiv.style.display = 'block';
+                        warningDiv.className = 'alert alert-warning';
+                        warningText.textContent = `Low stock warning: Only ${product.quantity} units remaining.`;
+                    } else {
+                        warningDiv.style.display = 'none';
+                    }
+                } else {
+                    warningDiv.style.display = 'none';
+                }
+            } else {
+                warningDiv.style.display = 'none';
+            }
+        }
+
+        function showCustomerBalance() {
+            const customerId = document.getElementById('receipt-customer-id').value;
+            const balanceDisplay = document.getElementById('customer-balance-display');
+            const balanceSpan = document.getElementById('current-customer-balance');
+            
+            if (customerId && cachedCustomers.length > 0) {
+                const customer = cachedCustomers.find(c => c.id === customerId);
+                if (customer) {
+                    balanceSpan.textContent = `${(customer.balance || 0).toFixed(2)} ريال`;
+                    balanceDisplay.style.display = 'block';
+                } else {
+                    balanceDisplay.style.display = 'none';
+                }
+            } else {
+                balanceDisplay.style.display = 'none';
+            }
+        }
+
+        function showVendorBalance() {
+            const vendorId = document.getElementById('payment-vendor-id').value;
+            const balanceDisplay = document.getElementById('vendor-balance-display');
+            const balanceSpan = document.getElementById('current-vendor-balance');
+            
+            if (vendorId && cachedVendors.length > 0) {
+                const vendor = cachedVendors.find(v => v.id === vendorId);
+                if (vendor) {
+                    balanceSpan.textContent = `${(vendor.balance || 0).toFixed(2)} ريال`;
+                    balanceDisplay.style.display = 'block';
+                } else {
+                    balanceDisplay.style.display = 'none';
+                }
+            } else {
+                balanceDisplay.style.display = 'none';
+            }
+        }
+
+        function loadConfig() {
+            const saved = localStorage.getItem('businessAppConfig');
+            if (saved) {
+                appConfig = JSON.parse(saved);
+                document.getElementById('api-url').value = appConfig.apiUrl;
+                if (appConfig.apiUrl) {
+                    document.getElementById('config-section').classList.add('hidden');
+                    testConnection();
+                }
+            }
+        }
+
+        function saveConfig() {
+            appConfig.apiUrl = document.getElementById('api-url').value;
+            localStorage.setItem('businessAppConfig', JSON.stringify(appConfig));
+            showAlert('Configuration saved!', 'success');
+            if (appConfig.apiUrl) {
+                testConnection();
+            }
+        }
+
+        async function testConnection() {
+            if (!appConfig.apiUrl) {
+                showAlert('Please enter your Google Apps Script URL', 'error');
+                return;
+            }
+
+            const testBtn = document.getElementById('test-btn');
+            testBtn.innerHTML = '<span class="loading-spinner"></span>Testing...';
+            testBtn.disabled = true;
+
+            try {
+                const response = await fetch(appConfig.apiUrl + '?action=test');
+                const data = await response.json();
+                
+                appConfig.connected = true;
+                updateConnectionStatus(true);
+                document.getElementById('config-section').classList.add('hidden');
+                showAlert('Connected successfully!', 'success');
+                
+                loadCustomers();
+                loadVendors();
+                refreshDashboard();
+                
+            } catch (error) {
+                console.error('Connection failed:', error);
+                appConfig.connected = false;
+                updateConnectionStatus(false);
+                showAlert('Connection failed. Check your URL and try again.', 'error');
+            } finally {
+                testBtn.innerHTML = '🔗 Test Connection';
+                testBtn.disabled = false;
+            }
+        }
+
+        function updateConnectionStatus(connected) {
+            const statusEl = document.getElementById('connection-status');
+            
+            if (connected) {
+                statusEl.innerHTML = '<span>Status: Connected</span><span class="status-indicator status-connected"></span>';
+            } else {
+                statusEl.innerHTML = '<span>Status: Disconnected</span><span class="status-indicator status-disconnected"></span>';
+            }
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'dashboard') {
+                refreshDashboard();
+            } else if (tabName === 'customers') {
+                loadCustomers();
+            } else if (tabName === 'vendors') {
+                loadVendors();
+            } else if (tabName === 'inventory') {
+                refreshInventory();
+            }
+        }
+
+        async function refreshDashboard() {
+            const refreshBtn = document.getElementById('refresh-btn');
+            refreshBtn.innerHTML = '<span class="loading-spinner"></span>Refreshing...';
+            refreshBtn.disabled = true;
+
+            try {
+                if (appConfig.connected) {
+                    const report = await apiCall('getProfitReport');
+                    updateDashboardWithData(report);
+                } else {
+                    const demoReport = {
+                        totalSales: businessData.totalSales || 15000,
+                        totalPurchases: businessData.totalPurchases || 8000,
+                        totalExpenses: businessData.totalExpenses || 3000,
+                        netProfit: (businessData.totalSales || 15000) - (businessData.totalPurchases || 8000) - (businessData.totalExpenses || 3000),
+                        thisMonthSales: businessData.thisMonthSales || 5000,
+                        thisMonthPurchases: businessData.thisMonthPurchases || 2500
+                    };
+                    updateDashboardWithData(demoReport);
+                }
+                
+            } catch (error) {
+                console.error('Dashboard refresh failed:', error);
+                showAlert('Failed to load dashboard data', 'error');
+            } finally {
+                refreshBtn.innerHTML = '🔄 Refresh';
+                refreshBtn.disabled = false;
+            }
+        }
+
+        function updateDashboardWithData(report) {
+            // Cash and balance metrics
+            document.getElementById('total-cash').textContent = `${businessData.cashInHand.toFixed(2)} ريال`;
+            
+            const totalReceivables = cachedCustomers.reduce((sum, customer) => sum + (customer.balance || 0), 0);
+            document.getElementById('total-receivables').textContent = `${totalReceivables.toFixed(2)} ريال`;
+            
+            const totalPayables = cachedVendors.reduce((sum, vendor) => sum + (vendor.balance || 0), 0);
+            document.getElementById('total-payables').textContent = `${totalPayables.toFixed(2)} ريال`;
+            
+            const netCashPosition = businessData.cashInHand + totalReceivables - totalPayables;
+            document.getElementById('net-cash-position').textContent = `${netCashPosition.toFixed(2)} ريال`;
+            
+            // Monthly metrics
+            document.getElementById('month-sales').textContent = `${(report.thisMonthSales || 0).toFixed(2)} ريال`;
+            document.getElementById('month-purchases').textContent = `${(report.thisMonthPurchases || 0).toFixed(2)} ريال`;
+            document.getElementById('month-cash-sales').textContent = `${businessData.thisMonthCashSales.toFixed(2)} ريال`;
+            document.getElementById('month-credit-sales').textContent = `${businessData.thisMonthCreditSales.toFixed(2)} ريال`;
+            
+            updateStockSummary();
+            
+            // Overall business metrics
+            document.getElementById('total-sales').textContent = `${(report.totalSales || 0).toFixed(2)} ريال`;
+            document.getElementById('total-purchases').textContent = `${(report.totalPurchases || 0).toFixed(2)} ريال`;
+            document.getElementById('total-expenses').textContent = `${(report.totalExpenses || 0).toFixed(2)} ريال`;
+            
+            const netProfit = (report.netProfit || 0);
+            document.getElementById('net-profit').textContent = `${netProfit.toFixed(2)} ريال`;
+            
+            // Update profit/loss indicator
+            const profitCard = document.getElementById('net-profit-card');
+            const profitIndicator = document.getElementById('profit-loss-indicator');
+            
+            profitCard.classList.remove('profit-positive', 'profit-negative');
+            profitIndicator.classList.remove('profit', 'loss', 'break-even');
+            
+            if (netProfit > 0) {
+                profitCard.classList.add('profit-positive');
+                profitIndicator.classList.add('profit');
+                profitIndicator.textContent = '📈 Profit';
+            } else if (netProfit < 0) {
+                profitCard.classList.add('profit-negative');
+                profitIndicator.classList.add('loss');
+                profitIndicator.textContent = '📉 Loss';
+            } else {
+                profitIndicator.classList.add('break-even');
+                profitIndicator.textContent = '⚖️ Break Even';
+            }
+        }
+
+        function updateStockSummary() {
+            const totalItems = cachedInventory.length;
+            const totalQuantity = cachedInventory.reduce((sum, item) => sum + item.quantity, 0);
+            const lowStockItems = cachedInventory.filter(item => item.quantity <= item.minStock && item.quantity > 0).length;
+            const outOfStockItems = cachedInventory.filter(item => item.quantity === 0).length;
+            
+            document.getElementById('total-stock-items').textContent = totalItems;
+            document.getElementById('total-stock-quantity').textContent = totalQuantity;
+            document.getElementById('low-stock-count').textContent = lowStockItems;
+            document.getElementById('out-stock-count').textContent = outOfStockItems;
+        }
+
+        async function addSale(event) {
+            event.preventDefault();
+            
+            const submitBtn = document.getElementById('sales-submit');
+            submitBtn.innerHTML = '<span class="loading-spinner"></span>Recording...';
+            submitBtn.disabled = true;
+            
+            const saleData = {
+                customerID: document.getElementById('sale-customer-id').value,
+                product: document.getElementById('sale-product').value,
+                description: document.getElementById('sale-description').value,
+                quantity: parseFloat(document.getElementById('sale-quantity').value),
+                unitPrice: parseFloat(document.getElementById('sale-unit-price').value),
+                amount: parseFloat(document.getElementById('sale-total').value),
+                paymentType: document.getElementById('sale-payment-type').value,
+                paymentMethod: document.getElementById('sale-payment-method').value,
+                invoice: document.getElementById('sale-invoice').value
+            };
+
+            try {
+                if (appConfig.connected) {
+                    const result = await apiCall('addSale', saleData);
+                    if (result.success) {
+                        showAlert('Sale recorded successfully!', 'success');
+                        updateLocalDataAfterSale(saleData);
+                        document.getElementById('sales-form').reset();
+                        generateInvoiceNumber();
+                        document.getElementById('sale-quantity').value = '1';
+                        document.getElementById('sale-payment-info').style.display = 'none';
+                        refreshDashboard();
+                    } else {
+                        showAlert('Failed to record sale: ' + result.error, 'error');
+                    }
+                } else {
+                    showAlert('Sale recorded successfully! (Demo mode)', 'success');
+                    updateLocalDataAfterSale(saleData);
+                    document.getElementById('sales-form').reset();
+                    generateInvoiceNumber();
+                    document.getElementById('sale-quantity').value = '1';
+                    document.getElementById('sale-payment-info').style.display = 'none';
+                    refreshDashboard();
+                }
+                
+            } catch (error) {
+                console.error('Add sale failed:', error);
+                showAlert('Failed to record sale: ' + error.message, 'error');
+            } finally {
+                submitBtn.innerHTML = '💰 Record Sale';
+                submitBtn.disabled = false;
+            }
+        }
+
+        function updateLocalDataAfterSale(saleData) {
+            // Update inventory
+            const productIndex = cachedInventory.findIndex(item => item.name === saleData.description);
+            if (productIndex !== -1) {
+                cachedInventory[productIndex].quantity = Math.max(0, cachedInventory[productIndex].quantity - saleData.quantity);
+            }
+            
+            // Update business data
+            businessData.totalSales += saleData.amount;
+            businessData.thisMonthSales += saleData.amount;
+            businessData.salesCount += 1;
+            
+            if (saleData.paymentType === 'Cash') {
+                businessData.cashInHand += saleData.amount;
+                businessData.thisMonthCashSales += saleData.amount;
+            } else if (saleData.paymentType === 'Credit') {
+                businessData.thisMonthCreditSales += saleData.amount;
+                // Update customer balance
+                const customerIndex = cachedCustomers.findIndex(c => c.id === saleData.customerID);
+                if (customerIndex !== -1) {
+                    cachedCustomers[customerIndex].balance = (cachedCustomers[customerIndex].balance || 0) + saleData.amount;
+                }
+            }
+            
+            updateInventoryDisplay();
+            updateProductDropdown();
+            updateCustomerDropdowns();
+        }
+
+        async function addPurchase(event) {
+            event.preventDefault();
+            
+            const submitBtn = document.getElementById('purchases-submit');
+            submitBtn.innerHTML = '<span class="loading-spinner"></span>Recording...';
+            submitBtn.disabled = true;
+            
+            const purchaseData = {
+                vendorID: document.getElementById('purchase-vendor').value,
+                description: document.getElementById('purchase-description').value,
+                category: document.getElementById('purchase-category').value,
+                quantity: parseFloat(document.getElementById('purchase-quantity').value),
+                unitCost: parseFloat(document.getElementById('purchase-unit-cost').value),
+                amount: parseFloat(document.getElementById('purchase-total').value),
+                paymentType: document.getElementById('purchase-payment-type').value,
+                paymentMethod: document.getElementById('purchase-payment-method').value,
+                receipt: document.getElementById('purchase-receipt').value
+            };
+
+            try {
+                if (appConfig.connected) {
+                    const result = await apiCall('addPurchase', purchaseData);
+                    if (result.success) {
+                        showAlert('Purchase recorded successfully!', 'success');
+                        updateLocalDataAfterPurchase(purchaseData);
+                        document.getElementById('purchases-form').reset();
+                        document.getElementById('purchase-quantity').value = '1';
+                        document.getElementById('purchase-payment-info').style.display = 'none';
+                        refreshDashboard();
+                    } else {
+                        showAlert('Failed to record purchase: ' + result.error, 'error');
+                    }
+                } else {
+                    showAlert('Purchase recorded successfully! (Demo mode)', 'success');
+                    updateLocalDataAfterPurchase(purchaseData);
+                    document.getElementById('purchases-form').reset();
+                    document.getElementById('purchase-quantity').value = '1';
+                    document.getElementById('purchase-payment-info').style.display = 'none';
+                    refreshDashboard();
+                }
+                
+            } catch (error) {
+                console.error('Add purchase failed:', error);
+                showAlert('Failed to record purchase: ' + error.message, 'error');
+            } finally {
+                submitBtn.innerHTML = '🛒 Record Purchase';
+                submitBtn.disabled = false;
+            }
+        }
+
+        function updateLocalDataAfterPurchase(purchaseData) {
+            // Update inventory
+            const productIndex = cachedInventory.findIndex(item => item.name === purchaseData.description);
+            if (productIndex !== -1) {
+                cachedInventory[productIndex].quantity += purchaseData.quantity;
+                cachedInventory[productIndex].unitCost = purchaseData.unitCost;
+            } else {
+                cachedInventory.push({
+                    name: purchaseData.description,
+                    category: purchaseData.category,
+                    quantity: purchaseData.quantity,
+                    unitCost: purchaseData.unitCost,
+                    sellingPrice: purchaseData.unitCost * 1.3,
+                    minStock: 5
+                });
+            }
+            
+            // Update business data
+            businessData.totalPurchases += purchaseData.amount;
+            businessData.thisMonthPurchases += purchaseData.amount;
+            
+            if (purchaseData.paymentType === 'Cash') {
+                businessData.cashInHand -= purchaseData.amount;
+            } else if (purchaseData.paymentType === 'Credit') {
+                // Update vendor balance
+                const vendorIndex = cachedVendors.findIndex(v => v.id === purchaseData.vendorID);
+                if (vendorIndex !== -1) {
+                    cachedVendors[vendorIndex].balance = (cachedVendors[vendorIndex].balance || 0) + purchaseData.amount;
+                }
+            }
+            
+            updateInventoryDisplay();
+            updateProductDropdown();
+            updateVendorDropdowns();
+        }
+
+        async function addExpense(event) {
+            event.preventDefault();
+            
+            const submitBtn = document.getElementById('expenses-submit');
+            submitBtn.innerHTML = '<span class="loading-spinner"></span>Recording...';
+            submitBtn.disabled = true;
+            
+            const expenseData = {
+                category: document.getElementById('expense-category').value,
+                description: document.getElementById('expense-description').value,
+                amount: parseFloat(document.getElementById('expense-amount').value),
+                vendor: document.getElementById('expense-vendor').value,
+                receipt: document.getElementById('expense-receipt').value,
+                paymentMethod: document.getElementById('expense-payment').value
+            };
+
+            try {
+                if (appConfig.connected) {
+                    const result = await apiCall('addExpense', expenseData);
+                    if (result.success) {
+                        showAlert('Expense recorded successfully!', 'success');
+                        businessData.totalExpenses += expenseData.amount;
+                        if (expenseData.paymentMethod === 'Cash') {
+                            businessData.cashInHand -= expenseData.amount;
+                        }
+                        document.getElementById('expenses-form').reset();
+                        refreshDashboard();
+                    } else {
+                        showAlert('Failed to record expense: ' + result.error, 'error');
+                    }
+                } else {
+                    showAlert('Expense recorded successfully! (Demo mode)', 'success');
+                    businessData.totalExpenses += expenseData.amount;
+                    if (expenseData.paymentMethod === 'Cash') {
+                        businessData.cashInHand -= expenseData.amount;
+                    }
+                    document.getElementById('expenses-form').reset();
+                    refreshDashboard();
+                }
+                
+            } catch (error) {
+                console.error('Add expense failed:', error);
+                showAlert('Failed to record expense: ' + error.message, 'error');
+            } finally {
+                submitBtn.innerHTML = '💸 Record Expense';
+                submitBtn.disabled = false;
+            }
+        }
+
+        async function addReceipt(event) {
+            event.preventDefault();
+            
+            const submitBtn = document.getElementById('receipts-submit');
+            submitBtn.innerHTML = '<span class="loading-spinner"></span>Recording...';
+            submitBtn.disabled = true;
+            
+            const receiptData = {
+                customerID: document.getElementById('receipt-customer-id').value,
+                amount: parseFloat(document.getElementById('receipt-amount').value),
+                paymentMethod: document.getElementById('receipt-method').value,
+                reference: document.getElementById('receipt-reference').value,
+                notes: document.getElementById('receipt-notes').value
+            };
+
+            try {
+                if (appConfig.connected) {
+                    const result = await apiCall('addReceipt', receiptData);
+                    if (result.success) {
+                        showAlert('Receipt recorded successfully!', 'success');
+                        updateLocalDataAfterReceipt(receiptData);
+                        document.getElementById('receipts-form').reset();
+                        document.getElementById('customer-balance-display').style.display = 'none';
+                        refreshDashboard();
+                    } else {
+                        showAlert('Failed to record receipt: ' + result.error, 'error');
+                    }
+                } else {
+                    showAlert('Receipt recorded successfully! (Demo mode)', 'success');
+                    updateLocalDataAfterReceipt(receiptData);
+                    document.getElementById('receipts-form').reset();
+                    document.getElementById('customer-balance-display').style.display = 'none';
+                    refreshDashboard();
+                }
+                
+            } catch (error) {
+                console.error('Add receipt failed:', error);
+                showAlert('Failed to record receipt: ' + error.message, 'error');
+            } finally {
+                submitBtn.innerHTML = '🧾 Record Receipt';
+                submitBtn.disabled = false;
+            }
+        }
+
+        function updateLocalDataAfterReceipt(receiptData) {
+            // Update customer balance
+            const customerIndex = cachedCustomers.findIndex(c => c.id === receiptData.customerID);
+            if (customerIndex !== -1) {
+                cachedCustomers[customerIndex].balance = Math.max(0, (cachedCustomers[customerIndex].balance || 0) - receiptData.amount);
+            }
+            
+            // Add to cash if payment method is cash
+            if (receiptData.paymentMethod === 'Cash') {
+                businessData.cashInHand += receiptData.amount;
+            }
+            
+            updateCustomerDropdowns();
+        }
+
+        async function addPayment(event) {
+            event.preventDefault();
+            
+            const submitBtn = document.getElementById('payments-submit');
+            submitBtn.innerHTML = '<span class="loading-spinner"></span>Recording...';
+            submitBtn.disabled = true;
+            
+            const paymentData = {
+                vendorID: document.getElementById('payment-vendor-id').value,
+                amount: parseFloat(document.getElementById('payment-amount').value),
+                paymentMethod: document.getElementById('payment-method').value,
+                reference: document.getElementById('payment-reference').value,
+                notes: document.getElementById('payment-notes').value
+            };
+
+            try {
+                if (appConfig.connected) {
+                    const result = await apiCall('addPayment', paymentData);
+                    if (result.success) {
+                        showAlert('Payment recorded successfully!', 'success');
+                        updateLocalDataAfterPayment(paymentData);
+                        document.getElementById('payments-form').reset();
+                        document.getElementById('vendor-balance-display').style.display = 'none';
+                        refreshDashboard();
+                    } else {
+                        showAlert('Failed to record payment: ' + result.error, 'error');
+                    }
+                } else {
+                    showAlert('Payment recorded successfully! (Demo mode)', 'success');
+                    updateLocalDataAfterPayment(paymentData);
+                    document.getElementById('payments-form').reset();
+                    document.getElementById('vendor-balance-display').style.display = 'none';
+                    refreshDashboard();
+                }
+                
+            } catch (error) {
+                console.error('Add payment failed:', error);
+                showAlert('Failed to record payment: ' + error.message, 'error');
+            } finally {
+                submitBtn.innerHTML = '💳 Record Payment';
+                submitBtn.disabled = false;
+            }
+        }
+
+        function updateLocalDataAfterPayment(paymentData) {
+            // Update vendor balance
+            const vendorIndex = cachedVendors.findIndex(v => v.id === paymentData.vendorID);
+            if (vendorIndex !== -1) {
+                cachedVendors[vendorIndex].balance = Math.max(0, (cachedVendors[vendorIndex].balance || 0) - paymentData.amount);
+            }
+            
+            // Deduct from cash if payment method is cash
+            if (paymentData.paymentMethod === 'Cash') {
+                businessData.cashInHand -= paymentData.amount;
+            }
+            
+            updateVendorDropdowns();
+        }
+
+        async function addCustomer(event) {
+            event.preventDefault();
+            
+            const submitBtn = document.getElementById('customers-submit');
+            submitBtn.innerHTML = '<span class="loading-spinner"></span>Adding...';
+            submitBtn.disabled = true;
+            
+            const customerData = {
+                name: document.getElementById('customer-name').value,
+                email: document.getElementById('customer-email').value,
+                phone: document.getElementById('customer-phone').value,
+                address: document.getElementById('customer-address').value
+            };
+
+            try {
+                if (appConfig.connected) {
+                    const result = await apiCall('addCustomer', customerData);
+                    if (result.success) {
+                        showAlert('Customer added successfully! ID: ' + result.result, 'success');
+                        document.getElementById('customers-form').reset();
+                        loadCustomers();
+                        updateCustomerDropdowns();
+                    } else {
+                        showAlert('Failed to add customer: ' + result.error, 'error');
+                    }
+                } else {
+                    customerData.id = 'CUST-' + Date.now();
+                    customerData.balance = 0;
+                    cachedCustomers.push(customerData);
+                    showAlert('Customer added successfully! (Demo mode)', 'success');
+                    document.getElementById('customers-form').reset();
+                    loadCustomers();
+                    updateCustomerDropdowns();
+                }
+                
+            } catch (error) {
+                console.error('Add customer failed:', error);
+                showAlert('Failed to add customer: ' + error.message, 'error');
+            } finally {
+                submitBtn.innerHTML = '👥 Add Customer';
+                submitBtn.disabled = false;
+            }
+        }
+
+        async function addVendor(event) {
+            event.preventDefault();
+            
+            const submitBtn = document.getElementById('vendors-submit');
+            submitBtn.innerHTML = '<span class="loading-spinner"></span>Adding...';
+            submitBtn.disabled = true;
+            
+            const vendorData = {
+                name: document.getElementById('vendor-name').value,
+                email: document.getElementById('vendor-email').value,
+                phone: document.getElementById('vendor-phone').value,
+                address: document.getElementById('vendor-address').value,
+                company: document.getElementById('vendor-company').value,
+                category: document.getElementById('vendor-category').value
+            };
+
+            try {
+                if (appConfig.connected) {
+                    const result = await apiCall('addVendor', vendorData);
+                    if (result.success) {
+                        showAlert('Vendor added successfully! ID: ' + result.result, 'success');
+                        document.getElementById('vendors-form').reset();
+                        loadVendors();
+                        updateVendorDropdowns();
+                    } else {
+                        showAlert('Failed to add vendor: ' + result.error, 'error');
+                    }
+                } else {
+                    vendorData.id = 'VEND-' + Date.now();
+                    vendorData.balance = 0;
+                    cachedVendors.push(vendorData);
+                    showAlert('Vendor added successfully! (Demo mode)', 'success');
+                    document.getElementById('vendors-form').reset();
+                    loadVendors();
+                    updateVendorDropdowns();
+                }
+                
+            } catch (error) {
+                console.error('Add vendor failed:', error);
+                showAlert('Failed to add vendor: ' + error.message, 'error');
+            } finally {
+                submitBtn.innerHTML = '🏪 Add Vendor';
+                submitBtn.disabled = false;
+            }
+        }
+
+        function refreshInventory() {
+            updateInventoryDisplay();
+            updateStockSummary();
+        }
+
+        function updateInventoryDisplay() {
+            const container = document.getElementById('inventory-list');
+            
+            if (cachedInventory.length === 0) {
+                container.innerHTML = '<div style="padding: 20px; text-align: center; color: #6c757d;">No inventory items yet. Add items through purchases or manually.</div>';
+                return;
+            }
+
+            container.innerHTML = cachedInventory.map(item => {
+                let stockClass = '';
+                if (item.quantity === 0) {
+                    stockClass = 'out-of-stock';
+                } else if (item.quantity <= item.minStock) {
+                    stockClass = 'low-stock';
+                }
+
+                const profit = item.sellingPrice - item.unitCost;
+                const profitMargin = item.unitCost > 0 ? ((profit / item.unitCost) * 100).toFixed(1) : 0;
+
+                return `
+                    <div class="inventory-item ${stockClass}">
+                        <h4>${item.name}</h4>
+                        <p><strong>Category:</strong> ${item.category}</p>
+                        <p><strong>Stock:</strong> ${item.quantity} units (Min: ${item.minStock})</p>
+                        <p><strong>Cost:</strong> ${item.unitCost.toFixed(2)} ريال | <strong>Price:</strong> ${item.sellingPrice.toFixed(2)} ريال</p>
+                        <p><strong>Profit per unit:</strong> ${profit.toFixed(2)} ريال (${profitMargin}%)</p>
+                        <p><strong>Total Value:</strong> ${(item.quantity * item.unitCost).toFixed(2)} ريال</p>
+                        ${item.quantity === 0 ? '<p style="color: #dc3545; font-weight: bold;">OUT OF STOCK</p>' : ''}
+                        ${item.quantity > 0 && item.quantity <= item.minStock ? '<p style="color: #ffc107; font-weight: bold;">LOW STOCK</p>' : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateProductDropdown() {
+            const select = document.getElementById('sale-product');
+            
+            while (select.children.length > 1) {
+                select.removeChild(select.lastChild);
+            }
+            
+            cachedInventory.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.name;
+                option.textContent = `${item.name} (${item.quantity} available - ${item.sellingPrice.toFixed(2)} ريال)`;
+                select.appendChild(option);
+            });
+        }
+
+        function addInventoryItem() {
+            document.getElementById('inventory-form').style.display = 'block';
+        }
+
+        function cancelInventoryItem() {
+            document.getElementById('inventory-form').style.display = 'none';
+            clearInventoryForm();
+        }
+
+        function clearInventoryForm() {
+            document.getElementById('inventory-name').value = '';
+            document.getElementById('inventory-category').value = 'Electronics';
+            document.getElementById('inventory-quantity').value = '0';
+            document.getElementById('inventory-cost').value = '';
+            document.getElementById('inventory-price').value = '';
+            document.getElementById('inventory-min-stock').value = '5';
+        }
+
+        function saveInventoryItem() {
+            const newItem = {
+                name: document.getElementById('inventory-name').value,
+                category: document.getElementById('inventory-category').value,
+                quantity: parseInt(document.getElementById('inventory-quantity').value),
+                unitCost: parseFloat(document.getElementById('inventory-cost').value),
+                sellingPrice: parseFloat(document.getElementById('inventory-price').value),
+                minStock: parseInt(document.getElementById('inventory-min-stock').value)
+            };
+
+            if (!newItem.name || newItem.unitCost <= 0 || newItem.sellingPrice <= 0) {
+                showAlert('Please fill all required fields with valid values', 'error');
+                return;
+            }
+
+            const existingIndex = cachedInventory.findIndex(item => item.name === newItem.name);
+            if (existingIndex !== -1) {
+                showAlert('Product already exists! Use purchases to add more stock.', 'error');
+                return;
+            }
+
+            cachedInventory.push(newItem);
+            updateInventoryDisplay();
+            updateProductDropdown();
+            updateStockSummary();
+            cancelInventoryItem();
+            showAlert('Inventory item added successfully!', 'success');
+        }
+
+        async function loadCustomers() {
+            const container = document.getElementById('customer-list');
+            
+            if (!appConfig.connected) {
+                // Start with empty customer list for live business
+                if (cachedCustomers.length === 0) {
+                    container.innerHTML = '<div style="padding: 20px; text-align: center; color: #6c757d;">No customers yet. Add your first customer above to get started.</div>';
+                    updateCustomerDropdowns([]);
+                    return;
+                }
+                
+                container.innerHTML = cachedCustomers.map(customer => `
+                    <div class="customer-card">
+                        <h4>${customer.name || 'Unnamed Customer'}</h4>
+                        <p><strong>ID:</strong> ${customer.id}</p>
+                        <p><strong>Email:</strong> ${customer.email || 'N/A'}</p>
+                        <p><strong>Phone:</strong> ${customer.phone || 'N/A'}</p>
+                        <p><strong>Address:</strong> ${customer.address || 'N/A'}</p>
+                        <p><strong>Balance:</strong> ${(customer.balance || 0).toFixed(2)} ريال ${(customer.balance || 0) > 0 ? '<span style="color: #ffc107;">(Credit Due)</span>' : ''}</p>
+                    </div>
+                `).join('');
+                
+                updateCustomerDropdowns(cachedCustomers);
+                return;
+            }
+            
+            try {
+                const customers = await apiCall('getCustomers');
+                cachedCustomers = customers;
+                
+                if (customers.length === 0) {
+                    container.innerHTML = '<div style="padding: 20px; text-align: center; color: #6c757d;">No customers yet. Add your first customer above.</div>';
+                    return;
+                }
+                
+                container.innerHTML = customers.map(customer => `
+                    <div class="customer-card">
+                        <h4>${customer.name || 'Unnamed Customer'}</h4>
+                        <p><strong>ID:</strong> ${customer.id}</p>
+                        <p><strong>Email:</strong> ${customer.email || 'N/A'}</p>
+                        <p><strong>Phone:</strong> ${customer.phone || 'N/A'}</p>
+                        <p><strong>Address:</strong> ${customer.address || 'N/A'}</p>
+                        <p><strong>Balance:</strong> ${(customer.balance || 0).toFixed(2)} ريال ${(customer.balance || 0) > 0 ? '<span style="color: #ffc107;">(Credit Due)</span>' : ''}</p>
+                    </div>
+                `).join('');
+                
+                updateCustomerDropdowns(customers);
+                
+            } catch (error) {
+                console.error('Load customers failed:', error);
+                container.innerHTML = '<div style="padding: 20px; text-align: center; color: #dc3545;">Failed to load customers</div>';
+            }
+        }
+
+        async function loadVendors() {
+            const container = document.getElementById('vendor-list');
+            
+            if (!appConfig.connected) {
+                // Start with empty vendor list for live business
+                if (cachedVendors.length === 0) {
+                    container.innerHTML = '<div style="padding: 20px; text-align: center; color: #6c757d;">No vendors yet. Add your first vendor above to get started.</div>';
+                    updateVendorDropdowns([]);
+                    return;
+                }
+                
+                container.innerHTML = cachedVendors.map(vendor => `
+                    <div class="vendor-card">
+                        <h4>${vendor.name || 'Unnamed Vendor'}</h4>
+                        <p><strong>ID:</strong> ${vendor.id}</p>
+                        <p><strong>Company:</strong> ${vendor.company || 'N/A'}</p>
+                        <p><strong>Category:</strong> ${vendor.category || 'N/A'}</p>
+                        <p><strong>Email:</strong> ${vendor.email || 'N/A'}</p>
+                        <p><strong>Phone:</strong> ${vendor.phone || 'N/A'}</p>
+                        <p><strong>Address:</strong> ${vendor.address || 'N/A'}</p>
+                        <p><strong>Balance:</strong> ${(vendor.balance || 0).toFixed(2)} ريال ${(vendor.balance || 0) > 0 ? '<span style="color: #dc3545;">(Amount Due)</span>' : ''}</p>
+                    </div>
+                `).join('');
+                
+                updateVendorDropdowns(cachedVendors);
+                return;
+            }
+            
+            try {
+                const vendors = await apiCall('getVendors');
+                cachedVendors = vendors;
+                
+                if (vendors.length === 0) {
+                    container.innerHTML = '<div style="padding: 20px; text-align: center; color: #6c757d;">No vendors yet. Add your first vendor above.</div>';
+                    return;
+                }
+                
+                container.innerHTML = vendors.map(vendor => `
+                    <div class="vendor-card">
+                        <h4>${vendor.name || 'Unnamed Vendor'}</h4>
+                        <p><strong>ID:</strong> ${vendor.id}</p>
+                        <p><strong>Company:</strong> ${vendor.company || 'N/A'}</p>
+                        <p><strong>Category:</strong> ${vendor.category || 'N/A'}</p>
+                        <p><strong>Email:</strong> ${vendor.email || 'N/A'}</p>
+                        <p><strong>Phone:</strong> ${vendor.phone || 'N/A'}</p>
+                        <p><strong>Address:</strong> ${vendor.address || 'N/A'}</p>
+                        <p><strong>Balance:</strong> ${(vendor.balance || 0).toFixed(2)} ريال ${(vendor.balance || 0) > 0 ? '<span style="color: #dc3545;">(Amount Due)</span>' : ''}</p>
+                    </div>
+                `).join('');
+                
+                updateVendorDropdowns(vendors);
+                
+            } catch (error) {
+                console.error('Load vendors failed:', error);
+                container.innerHTML = '<div style="padding: 20px; text-align: center; color: #dc3545;">Failed to load vendors</div>';
+            }
+        }
+
+        function updateCustomerDropdowns(customers = cachedCustomers) {
+            const selects = [
+                document.getElementById('sale-customer-id'),
+                document.getElementById('receipt-customer-id')
+            ];
+            
+            selects.forEach(select => {
+                if (select) {
+                    while (select.children.length > 1) {
+                        select.removeChild(select.lastChild);
+                    }
+                    
+                    customers.forEach(customer => {
+                        const option = document.createElement('option');
+                        option.value = customer.id;
+                        option.textContent = `${customer.name || `Customer ${customer.id}`} (Balance: ${(customer.balance || 0).toFixed(2)} ريال)`;
+                        select.appendChild(option);
+                    });
+                }
+            });
+        }
+
+        function updateVendorDropdowns(vendors = cachedVendors) {
+            const selects = [
+                document.getElementById('purchase-vendor'),
+                document.getElementById('payment-vendor-id')
+            ];
+            
+            selects.forEach(select => {
+                if (select) {
+                    while (select.children.length > 1) {
+                        select.removeChild(select.lastChild);
+                    }
+                    
+                    vendors.forEach(vendor => {
+                        const option = document.createElement('option');
+                        option.value = vendor.id;
+                        option.textContent = `${vendor.name || `Vendor ${vendor.id}`} (Balance: ${(vendor.balance || 0).toFixed(2)} ريال)`;
+                        select.appendChild(option);
+                    });
+                }
+            });
+        }
+
+        // Report Functions
+        function generateSalesReport() {
+            const content = document.getElementById('reports-content');
+            const totalSales = businessData.totalSales || 0;
+            const salesCount = businessData.salesCount || 0;
+            const avgSale = salesCount > 0 ? totalSales / salesCount : 0;
+            const cashSales = businessData.thisMonthCashSales || 0;
+            const creditSales = businessData.thisMonthCreditSales || 0;
+            
+            content.innerHTML = `
+                <div style="padding: 20px;">
+                    <h3>📈 Sales Report</h3>
+                    <div class="dashboard-cards">
+                        <div class="dashboard-card">
+                            <h3>${salesCount}</h3>
+                            <p>Total Sales Count</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${totalSales.toFixed(2)} ريال</h3>
+                            <p>Total Revenue</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${avgSale.toFixed(2)} ريال</h3>
+                            <p>Average Sale</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${cachedCustomers.length}</h3>
+                            <p>Total Customers</p>
+                        </div>
+                    </div>
+                    <div class="dashboard-cards">
+                        <div class="dashboard-card cash-card">
+                            <h3>${cashSales.toFixed(2)} ريال</h3>
+                            <p>Cash Sales</p>
+                        </div>
+                        <div class="dashboard-card receivable-card">
+                            <h3>${creditSales.toFixed(2)} ريال</h3>
+                            <p>Credit Sales</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${cashSales + creditSales > 0 ? ((cashSales / (cashSales + creditSales)) * 100).toFixed(1) : '0'}%</h3>
+                            <p>Cash Sales %</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${cashSales + creditSales > 0 ? ((creditSales / (cashSales + creditSales)) * 100).toFixed(1) : '0'}%</h3>
+                            <p>Credit Sales %</p>
+                        </div>
+                    </div>
+                    ${cachedInventory.length > 0 ? `
+                    <h4>Product Inventory</h4>
+                    ${cachedInventory.slice(0, 5).map(item => `
+                        <div class="customer-card">
+                            <h5>${item.name}</h5>
+                            <p><strong>Category:</strong> ${item.category} | <strong>Current Stock:</strong> ${item.quantity} units</p>
+                            <p><strong>Selling Price:</strong> ${item.sellingPrice.toFixed(2)} ريال | <strong>Profit Margin:</strong> ${item.unitCost > 0 ? (((item.sellingPrice - item.unitCost) / item.unitCost) * 100).toFixed(1) : 0}%</p>
+                        </div>
+                    `).join(''))` : '<div style="padding: 20px; text-align: center; color: #6c757d;">No products in inventory yet. Add products to see sales analysis.</div>'}
+                </div>
+            `;
+        }
+
+        function generatePurchaseReport() {
+            const content = document.getElementById('reports-content');
+            const totalPurchases = businessData.totalPurchases || 8500;
+            const totalPayables = cachedVendors.reduce((sum, vendor) => sum + (vendor.balance || 0), 0);
+            const paidAmount = totalPurchases - totalPayables;
+            
+            content.innerHTML = `
+                <div style="padding: 20px;">
+                    <h3>🛒 Purchase Report</h3>
+                    <div class="dashboard-cards">
+                        <div class="dashboard-card">
+                            <h3>${totalPurchases.toFixed(2)} ريال</h3>
+                            <p>Total Purchases</p>
+                        </div>
+                        <div class="dashboard-card cash-card">
+                            <h3>${paidAmount.toFixed(2)} ريال</h3>
+                            <p>Amount Paid</p>
+                        </div>
+                        <div class="dashboard-card payable-card">
+                            <h3>${totalPayables.toFixed(2)} ريال</h3>
+                            <p>Outstanding Payables</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${cachedVendors.length}</h3>
+                            <p>Total Vendors</p>
+                        </div>
+                    </div>
+                    <h4>Vendor Balances</h4>
+                    ${cachedVendors.filter(vendor => (vendor.balance || 0) > 0).map(vendor => `
+                        <div class="vendor-card">
+                            <h5>${vendor.name}</h5>
+                            <p><strong>Company:</strong> ${vendor.company || 'N/A'} | <strong>Outstanding:</strong> ${(vendor.balance || 0).toFixed(2)} ريال</p>
+                            <p><strong>Contact:</strong> ${vendor.phone || vendor.email || 'N/A'}</p>
+                        </div>
+                    `).join('') || '<p>No outstanding vendor balances</p>'}
+                </div>
+            `;
+        }
+
+        function generateInventoryReport() {
+            const content = document.getElementById('reports-content');
+            const totalValue = cachedInventory.reduce((sum, item) => sum + (item.quantity * item.unitCost), 0);
+            const lowStockCount = cachedInventory.filter(item => item.quantity <= item.minStock && item.quantity > 0).length;
+            const outOfStockCount = cachedInventory.filter(item => item.quantity === 0).length;
+            const totalQuantity = cachedInventory.reduce((sum, item) => sum + item.quantity, 0);
+            
+            content.innerHTML = `
+                <div style="padding: 20px;">
+                    <h3>📦 Inventory Report</h3>
+                    <div class="dashboard-cards">
+                        <div class="dashboard-card">
+                            <h3>${cachedInventory.length}</h3>
+                            <p>Total Products</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${totalQuantity}</h3>
+                            <p>Total Quantity</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${totalValue.toFixed(2)} ريال</h3>
+                            <p>Total Value</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${lowStockCount + outOfStockCount}</h3>
+                            <p>Items Need Attention</p>
+                        </div>
+                    </div>
+                    <h4>Inventory Status</h4>
+                    ${cachedInventory.map(item => {
+                        let statusColor = '#28a745';
+                        let statusText = 'In Stock';
+                        if (item.quantity === 0) {
+                            statusColor = '#dc3545';
+                            statusText = 'Out of Stock';
+                        } else if (item.quantity <= item.minStock) {
+                            statusColor = '#ffc107';
+                            statusText = 'Low Stock';
+                        }
+                        
+                        return `
+                            <div class="customer-card">
+                                <h5>${item.name}</h5>
+                                <p><strong>Stock:</strong> ${item.quantity} units | 
+                                   <strong>Value:</strong> ${(item.quantity * item.unitCost).toFixed(2)} ريال | 
+                                   <span style="color: ${statusColor}; font-weight: bold;">${statusText}</span></p>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        function generateCustomerReport() {
+            const content = document.getElementById('reports-content');
+            const totalBalance = cachedCustomers.reduce((sum, customer) => sum + (customer.balance || 0), 0);
+            const activeCustomers = cachedCustomers.filter(customer => (customer.balance || 0) > 0).length;
+            
+            content.innerHTML = `
+                <div style="padding: 20px;">
+                    <h3>👥 Customer Report</h3>
+                    <div class="dashboard-cards">
+                        <div class="dashboard-card">
+                            <h3>${cachedCustomers.length}</h3>
+                            <p>Total Customers</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${activeCustomers}</h3>
+                            <p>Customers with Credit</p>
+                        </div>
+                        <div class="dashboard-card receivable-card">
+                            <h3>${totalBalance.toFixed(2)} ريال</h3>
+                            <p>Total Receivables</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${cachedCustomers.length > 0 ? (totalBalance / cachedCustomers.length).toFixed(2) : '0'} ريال</h3>
+                            <p>Avg Customer Balance</p>
+                        </div>
+                    </div>
+                    <h4>Customer Receivables</h4>
+                    ${cachedCustomers.filter(customer => (customer.balance || 0) > 0).map(customer => `
+                        <div class="customer-card">
+                            <h5>${customer.name}</h5>
+                            <p><strong>Outstanding:</strong> ${(customer.balance || 0).toFixed(2)} ريال | 
+                               <strong>Contact:</strong> ${customer.phone || customer.email || 'N/A'}</p>
+                        </div>
+                    `).join('') || '<p>No outstanding customer balances</p>'}
+                </div>
+            `;
+        }
+
+        function generateVendorReport() {
+            const content = document.getElementById('reports-content');
+            const totalBalance = cachedVendors.reduce((sum, vendor) => sum + (vendor.balance || 0), 0);
+            const activeVendors = cachedVendors.filter(vendor => (vendor.balance || 0) > 0).length;
+            
+            content.innerHTML = `
+                <div style="padding: 20px;">
+                    <h3>🏪 Vendor Report</h3>
+                    <div class="dashboard-cards">
+                        <div class="dashboard-card">
+                            <h3>${cachedVendors.length}</h3>
+                            <p>Total Vendors</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${activeVendors}</h3>
+                            <p>Vendors with Payables</p>
+                        </div>
+                        <div class="dashboard-card payable-card">
+                            <h3>${totalBalance.toFixed(2)} ريال</h3>
+                            <p>Total Payables</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${cachedVendors.length > 0 ? (totalBalance / cachedVendors.length).toFixed(2) : '0'} ريال</h3>
+                            <p>Avg Vendor Balance</p>
+                        </div>
+                    </div>
+                    <h4>Vendor Payables</h4>
+                    ${cachedVendors.filter(vendor => (vendor.balance || 0) > 0).map(vendor => `
+                        <div class="vendor-card">
+                            <h5>${vendor.name}</h5>
+                            <p><strong>Outstanding:</strong> ${(vendor.balance || 0).toFixed(2)} ريال | 
+                               <strong>Company:</strong> ${vendor.company || 'N/A'}</p>
+                            <p><strong>Contact:</strong> ${vendor.phone || vendor.email || 'N/A'}</p>
+                        </div>
+                    `).join('') || '<p>No outstanding vendor balances</p>'}
+                </div>
+            `;
+        }
+
+        function generateCashFlowReport() {
+            const content = document.getElementById('reports-content');
+            const totalReceivables = cachedCustomers.reduce((sum, customer) => sum + (customer.balance || 0), 0);
+            const totalPayables = cachedVendors.reduce((sum, vendor) => sum + (vendor.balance || 0), 0);
+            const netCashPosition = businessData.cashInHand + totalReceivables - totalPayables;
+            const inventoryValue = cachedInventory.reduce((total, item) => total + (item.quantity * item.unitCost), 0);
+            
+            content.innerHTML = `
+                <div style="padding: 20px;">
+                    <h3>💰 Cash Flow Report</h3>
+                    <div class="dashboard-cards">
+                        <div class="dashboard-card cash-card">
+                            <h3>${businessData.cashInHand.toFixed(2)} ريال</h3>
+                            <p>Cash in Hand</p>
+                        </div>
+                        <div class="dashboard-card receivable-card">
+                            <h3>${totalReceivables.toFixed(2)} ريال</h3>
+                            <p>Receivables</p>
+                        </div>
+                        <div class="dashboard-card payable-card">
+                            <h3>${totalPayables.toFixed(2)} ريال</h3>
+                            <p>Payables</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${netCashPosition.toFixed(2)} ريال</h3>
+                            <p>Net Cash Position</p>
+                        </div>
+                    </div>
+                    <div class="dashboard-cards">
+                        <div class="dashboard-card">
+                            <h3>${inventoryValue.toFixed(2)} ريال</h3>
+                            <p>Inventory Value</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${(businessData.cashInHand + inventoryValue).toFixed(2)} ريال</h3>
+                            <p>Total Assets</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${businessData.thisMonthCashSales.toFixed(2)} ريال</h3>
+                            <p>This Month Cash Inflow</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${((businessData.cashInHand / (businessData.cashInHand + totalReceivables)) * 100).toFixed(1)}%</h3>
+                            <p>Cash vs Credit Ratio</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateProfitLossReport() {
+            const content = document.getElementById('reports-content');
+            
+            const revenue = businessData.totalSales || 15750;
+            const cogs = businessData.totalPurchases || 8500;
+            const grossProfit = revenue - cogs;
+            const expenses = businessData.totalExpenses || 3000;
+            const netProfit = grossProfit - expenses;
+            const grossMargin = revenue > 0 ? ((grossProfit / revenue) * 100).toFixed(1) : '0';
+            const netMargin = revenue > 0 ? ((netProfit / revenue) * 100).toFixed(1) : '0';
+            
+            content.innerHTML = `
+                <div style="padding: 20px;">
+                    <h3>📊 Profit & Loss Report</h3>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr style="border-bottom: 2px solid #dee2e6;">
+                                <td style="padding: 10px; font-weight: bold;">Revenue (Sales)</td>
+                                <td style="padding: 10px; text-align: right; font-weight: bold;">${revenue.toFixed(2)} ريال</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #dee2e6;">
+                                <td style="padding: 10px;">Cost of Goods Sold</td>
+                                <td style="padding: 10px; text-align: right; color: #dc3545;">-${cogs.toFixed(2)} ريال</td>
+                            </tr>
+                            <tr style="border-bottom: 2px solid #dee2e6; background: #e9ecef;">
+                                <td style="padding: 10px; font-weight: bold;">Gross Profit</td>
+                                <td style="padding: 10px; text-align: right; font-weight: bold; color: #28a745;">${grossProfit.toFixed(2)} ريال</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #dee2e6;">
+                                <td style="padding: 10px;">Operating Expenses</td>
+                                <td style="padding: 10px; text-align: right; color: #dc3545;">-${expenses.toFixed(2)} ريال</td>
+                            </tr>
+                            <tr style="border-bottom: 2px solid #dee2e6; background: #e9ecef;">
+                                <td style="padding: 10px; font-weight: bold;">Net Profit</td>
+                                <td style="padding: 10px; text-align: right; font-weight: bold; color: ${netProfit >= 0 ? '#28a745' : '#dc3545'};">${netProfit.toFixed(2)} ريال</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="dashboard-cards">
+                        <div class="dashboard-card">
+                            <h3>${grossMargin}%</h3>
+                            <p>Gross Margin</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${netMargin}%</h3>
+                            <p>Net Margin</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${revenue > 0 ? ((expenses / revenue) * 100).toFixed(1) : '0'}%</h3>
+                            <p>Expense Ratio</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>${businessData.cashInHand.toFixed(2)} ريال</h3>
+                            <p>Cash Position</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function apiCall(action, data = {}) {
+            if (!appConfig.apiUrl) {
+                throw new Error('API URL not configured');
+            }
+
+            try {
+                const params = new URLSearchParams({
+                    action: action,
+                    ...data
+                });
+                
+                const url = appConfig.apiUrl + '?' + params.toString();
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                return result;
+                
+            } catch (error) {
+                console.error('API call failed:', error);
+                throw error;
+            }
+        }
+
+        function showAlert(message, type) {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            
+            const activeTab = document.querySelector('.tab-panel.active');
+            activeTab.insertBefore(alert, activeTab.firstChild);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        function clearForm(formId) {
+            document.getElementById(formId).reset();
+            
+            // Reset specific fields and hide info panels
+            if (formId === 'sales-form') {
+                generateInvoiceNumber();
+                document.getElementById('sale-quantity').value = '1';
+                document.getElementById('stock-warning').style.display = 'none';
+                document.getElementById('sale-payment-info').style.display = 'none';
+            } else if (formId === 'purchases-form') {
+                document.getElementById('purchase-quantity').value = '1';
+                document.getElementById('purchase-payment-info').style.display = 'none';
+            } else if (formId === 'receipts-form') {
+                document.getElementById('customer-balance-display').style.display = 'none';
+            } else if (formId === 'payments-form') {
+                document.getElementById('vendor-balance-display').style.display = 'none';
+            }
+        }
+
+        function generateInvoiceNumber() {
+            const date = new Date();
+            const invoiceNum = `INV-${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}-${String(Date.now()).slice(-4)}`;
+            const invoiceField = document.getElementById('sale-invoice');
+            if (invoiceField) {
+                invoiceField.value = invoiceNum;
+            }
+        }
+
+        // Initialize the application
+        setTimeout(() => {
+            refreshDashboard();
+            loadCustomers();
+            loadVendors();
+        }, 1000);
+    </script>
+</body>
+</html>
